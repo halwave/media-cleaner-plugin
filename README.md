@@ -1,5 +1,7 @@
 # Media Cleaner Plugin
 
+> **Note:** This project is based on the official [Payload Plugin Template](https://github.com/payloadcms/payload/tree/main/templates/plugin).
+
 A Payload CMS plugin to help you manage your media library by identifying unused media files and tracking where media is used throughout your project. This plugin makes it easy to keep your media storage clean and organized by allowing you to:
 
 - Find all sources of media used in your Payload project
