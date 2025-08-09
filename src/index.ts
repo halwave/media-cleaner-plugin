@@ -1,113 +1,45 @@
-import type { CollectionSlug, Config } from 'payload'
-
-import { customEndpointHandler } from './endpoints/customEndpointHandler.js'
+import type { CollectionSlug, Config, CollectionConfig } from 'payload'
 
 export type MediaCleanerPluginConfig = {
-  /**
-   * List of collections to add a custom field
-   */
   collections?: Partial<Record<CollectionSlug, true>>
   disabled?: boolean
 }
 
 export const mediaCleanerPlugin =
-  (pluginOptions: MediaCleanerPluginConfig) =>
-  (config: Config): Config => {
-    if (!config.collections) {
-      config.collections = []
-    }
+  (pluginOptions: MediaCleanerPluginConfig = {}) =>
+  (incomingConfig: Config): Config => {
+    let config = { ...incomingConfig }
 
-    config.collections.push({
-      slug: 'plugin-collection',
-      fields: [
-        {
-          name: 'id',
-          type: 'text',
-        },
-      ],
-    })
-
-    if (pluginOptions.collections) {
-      for (const collectionSlug in pluginOptions.collections) {
-        const collection = config.collections.find(
-          (collection) => collection.slug === collectionSlug,
-        )
-
-        if (collection) {
-          collection.fields.push({
-            name: 'addedByPlugin',
-            type: 'text',
-            admin: {
-              position: 'sidebar',
+    // Add a virtual field to the media collection for referenced posts
+    config.collections = (config.collections || []).map((collection) => {
+      if (collection.slug === 'media') {
+        return {
+          ...collection,
+          fields: [
+            ...(collection.fields || []),
+            {
+              name: 'referencedPosts',
+              type: 'ui',
+              admin: {
+                position: 'sidebar',
+                components: {
+                  Field: 'media-cleaner-plugin/components/ReferencedPostsCell',
+                },
+              },
             },
-          })
-        }
+          ],
+        } as CollectionConfig
       }
-    }
-
-    /**
-     * If the plugin is disabled, we still want to keep added collections/fields so the database schema is consistent which is important for migrations.
-     * If your plugin heavily modifies the database schema, you may want to remove this property.
-     */
-    if (pluginOptions.disabled) {
-      return config
-    }
-
-    if (!config.endpoints) {
-      config.endpoints = []
-    }
-
-    if (!config.admin) {
-      config.admin = {}
-    }
-
-    if (!config.admin.components) {
-      config.admin.components = {}
-    }
-
-    if (!config.admin.components.beforeDashboard) {
-      config.admin.components.beforeDashboard = []
-    }
-
-    config.admin.components.beforeDashboard.push(
-      `media-cleaner-plugin/client#BeforeDashboardClient`,
-    )
-    config.admin.components.beforeDashboard.push(
-      `media-cleaner-plugin/rsc#BeforeDashboardServer`,
-    )
-
-    config.endpoints.push({
-      handler: customEndpointHandler,
-      method: 'get',
-      path: '/my-plugin-endpoint',
+      return collection
     })
 
-    const incomingOnInit = config.onInit
-
+    // Add to onInit
     config.onInit = async (payload) => {
-      // Ensure we are executing any existing onInit functions before running our own.
-      if (incomingOnInit) {
-        await incomingOnInit(payload)
-      }
-
-      const { totalDocs } = await payload.count({
-        collection: 'plugin-collection',
-        where: {
-          id: {
-            equals: 'seeded-by-plugin',
-          },
-        },
-      })
-
-      if (totalDocs === 0) {
-        await payload.create({
-          collection: 'plugin-collection',
-          data: {
-            id: 'seeded-by-plugin',
-          },
-        })
-      }
+      if (incomingConfig.onInit) await incomingConfig.onInit(payload)
+      // Add additional onInit code here
     }
 
     return config
   }
+
+export default mediaCleanerPlugin
