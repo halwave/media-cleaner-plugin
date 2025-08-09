@@ -8,9 +8,8 @@ export type MediaCleanerPluginConfig = {
 export const mediaCleanerPlugin =
   (pluginOptions: MediaCleanerPluginConfig = {}) =>
   (incomingConfig: Config): Config => {
-    let config = { ...incomingConfig }
+    const config = { ...incomingConfig }
 
-    // Add a virtual field to the media collection for referenced posts
     config.collections = (config.collections || []).map((collection) => {
       if (collection.slug === 'media') {
         return {
@@ -18,26 +17,30 @@ export const mediaCleanerPlugin =
           fields: [
             ...(collection.fields || []),
             {
-              name: 'referencedPosts',
+              name: 'mediaUsage',
               type: 'ui',
               admin: {
                 position: 'sidebar',
                 components: {
-                  Field: 'media-cleaner-plugin/components/ReferencedPostsCell',
+                  Field: require('./components/MediaUsageSidebar').default,
                 },
               },
             },
           ],
-        } as CollectionConfig
+          admin: {
+            ...(collection.admin || {}),
+            components: {
+              ...(collection.admin?.components || {}),
+              beforeListTable: [
+                require('./components/DeleteUnusedMediaButton').default,
+                ...((collection.admin?.components?.beforeListTable as any[]) || []),
+              ],
+            },
+          },
+        }
       }
       return collection
     })
-
-    // Add to onInit
-    config.onInit = async (payload) => {
-      if (incomingConfig.onInit) await incomingConfig.onInit(payload)
-      // Add additional onInit code here
-    }
 
     return config
   }
