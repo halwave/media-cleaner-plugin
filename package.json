@@ -1,7 +1,7 @@
 {
   "name": "media-cleaner-plugin",
   "version": "1.0.0",
-  "description": "A blank template to get started with Payload 3.0",
+  "description": "A Payload CMS plugin to find, track, and clean up unused media files in your project.",
   "license": "MIT",
   "type": "module",
   "exports": {
