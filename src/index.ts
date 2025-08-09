@@ -1,4 +1,5 @@
-import type { CollectionSlug, Config, CollectionConfig } from 'payload'
+import type { CollectionSlug, Config } from 'payload'
+import { mediaReferencesEndpoint } from './endpoints/mediaReferences.js'
 
 export type MediaCleanerPluginConfig = {
   collections?: Partial<Record<CollectionSlug, true>>
@@ -42,6 +43,8 @@ export const mediaCleanerPlugin =
       return collection
     })
 
+    // Register the endpoint automatically
+    config.endpoints = [...(config.endpoints || []), mediaReferencesEndpoint]
     return config
   }
 
