@@ -1,5 +1,6 @@
 import type { CollectionSlug, Config } from 'payload'
 import { mediaReferencesEndpoint } from './endpoints/mediaReferences.js'
+import { customEndpointHandler } from './endpoints/customEndpointHandler.js'
 
 export type MediaCleanerPluginConfig = {
   collections?: Partial<Record<CollectionSlug, true>>
@@ -19,13 +20,9 @@ export const mediaCleanerPlugin =
             ...(collection.fields || []),
             {
               name: 'mediaUsage',
-              type: 'ui',
-              admin: {
-                position: 'sidebar',
-                components: {
-                  Field: require('./components/MediaUsageSidebar').default,
-                },
-              },
+              label: 'Media Usage',
+              type: 'text',
+              readOnly: true,
             },
           ],
           admin: {
@@ -45,6 +42,33 @@ export const mediaCleanerPlugin =
 
     // Register the endpoint automatically
     config.endpoints = [...(config.endpoints || []), mediaReferencesEndpoint]
+
+    if (pluginOptions.disabled) {
+      return config
+    }
+
+    if (!config.endpoints) {
+      config.endpoints = []
+    }
+
+    if (!config.admin) {
+      config.admin = {}
+    }
+
+    if (!config.admin.components) {
+      config.admin.components = {}
+    }
+
+    const incomingOnInit = config.onInit
+
+    config.onInit = async (payload) => {
+      // Ensure we are executing any existing onInit functions before running our own.
+
+      if (incomingOnInit) {
+        await incomingOnInit(payload)
+      }
+    }
+
     return config
   }
 

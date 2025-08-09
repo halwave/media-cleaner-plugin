@@ -9,6 +9,9 @@ export const mediaReferencesEndpoint: Endpoint = {
     if (!mediaId) {
       return Response.json({ error: 'Missing mediaId' }, { status: 400 })
     }
+    console.log('Received request for media references')
+    console.log(req.payload)
+    console.log('Fetching references for mediaId:', mediaId)
     const results = await findMediaReferences(req.payload, String(mediaId))
     return Response.json(results)
   },

@@ -83,13 +83,7 @@ const buildConfigWithMemoryDB = async () => {
     onInit: async (payload) => {
       await seed(payload)
     },
-    plugins: [
-      mediaCleanerPlugin({
-        collections: {
-          posts: true,
-        },
-      }),
-    ],
+    plugins: [mediaCleanerPlugin({})],
     secret: process.env.PAYLOAD_SECRET || 'test-secret_key',
     sharp,
     typescript: {
