@@ -1,4 +1,5 @@
 import type { CollectionSlug, Config } from 'payload'
+import { deleteUnusedMedia } from './endpoints/media-controller.js'
 
 export type MediaCleanerPluginConfig = {
   collections?: Partial<Record<CollectionSlug, true>>
@@ -49,7 +50,7 @@ export const mediaCleanerPlugin =
     })
 
     // Register the endpoint automatically
-    config.endpoints = [...(config.endpoints || [])]
+    config.endpoints = [...(config.endpoints || []), deleteUnusedMedia]
 
     if (pluginOptions.disabled) {
       return config

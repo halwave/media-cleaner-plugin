@@ -7,8 +7,8 @@ async function deleteUnusedMedia(): Promise<void> {
     return
   }
 
-  await fetch('/api/media-cleaner/delete-unused', {
-    method: 'POST',
+  await fetch('/api/media/delete-unused', {
+    method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
     },
