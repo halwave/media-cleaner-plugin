@@ -1,6 +1,4 @@
 import type { CollectionSlug, Config } from 'payload'
-import { mediaReferencesEndpoint } from './endpoints/mediaReferences.js'
-import { customEndpointHandler } from './endpoints/customEndpointHandler.js'
 
 export type MediaCleanerPluginConfig = {
   collections?: Partial<Record<CollectionSlug, true>>
@@ -20,8 +18,22 @@ export const mediaCleanerPlugin =
             ...(collection.fields || []),
             {
               name: 'mediaUsage',
-              type: 'text',
+              type: 'join',
+              collection: 'posts',
+              on: 'media',
               readOnly: true,
+            },
+            {
+              name: 'mediaUsageCount',
+              label: 'Number of References',
+              type: 'number',
+              hooks: {
+                afterRead: [
+                  ({ data }) => {
+                    return `${data?.mediaUsage.docs.length}`
+                  },
+                ],
+              },
             },
           ],
           admin: {
@@ -37,7 +49,7 @@ export const mediaCleanerPlugin =
     })
 
     // Register the endpoint automatically
-    config.endpoints = [...(config.endpoints || []), mediaReferencesEndpoint]
+    config.endpoints = [...(config.endpoints || [])]
 
     if (pluginOptions.disabled) {
       return config
