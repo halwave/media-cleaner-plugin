@@ -1,11 +1,10 @@
 import React from 'react'
+import { BeforeListTableServerProps } from 'payload'
 
-const DeleteUnusedMediaButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
+export function DeleteUnusedMediaButton(props: BeforeListTableServerProps) {
   return (
-    <button style={{ float: 'right', margin: '0 0 16px 16px' }} onClick={onClick}>
-      Delete All Unused Media
-    </button>
+    <>
+      <button style={{ float: 'right', margin: '0 0 16px 16px' }}>Delete All Unused Media</button>
+    </>
   )
 }
-
-export default DeleteUnusedMediaButton

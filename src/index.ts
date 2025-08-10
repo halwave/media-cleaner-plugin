@@ -20,7 +20,6 @@ export const mediaCleanerPlugin =
             ...(collection.fields || []),
             {
               name: 'mediaUsage',
-              label: 'Media Usage',
               type: 'text',
               readOnly: true,
             },
@@ -29,10 +28,7 @@ export const mediaCleanerPlugin =
             ...(collection.admin || {}),
             components: {
               ...(collection.admin?.components || {}),
-              beforeListTable: [
-                require('./components/DeleteUnusedMediaButton').default,
-                ...((collection.admin?.components?.beforeListTable as any[]) || []),
-              ],
+              beforeListTable: ['media-cleaner-plugin/rsc#DeleteUnusedMediaButton'],
             },
           },
         }
