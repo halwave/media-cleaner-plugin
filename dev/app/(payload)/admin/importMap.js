@@ -1,5 +1,5 @@
-import { DeleteUnusedMediaButton as DeleteUnusedMediaButton_2c9bf621f73ec7338a94b38d763bdde6 } from 'media-cleaner-plugin/rsc'
+import { DeleteUnusedMediaButton as DeleteUnusedMediaButton_0430b56c8138fea6a264c12df2994c01 } from 'media-cleaner-plugin/client'
 
 export const importMap = {
-  "media-cleaner-plugin/rsc#DeleteUnusedMediaButton": DeleteUnusedMediaButton_2c9bf621f73ec7338a94b38d763bdde6
+  "media-cleaner-plugin/client#DeleteUnusedMediaButton": DeleteUnusedMediaButton_0430b56c8138fea6a264c12df2994c01
 }

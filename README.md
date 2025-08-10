@@ -31,28 +31,11 @@ export const config = buildConfig({
 })
 ```
 
-## Configuration
-
-You can pass options to the plugin to customize its behavior:
-
-```ts
-mediaCleanerPlugin({
-  collections: {
-    media: true, // Specify which collections to scan for media usage
-  },
-  trackUsage: true, // Enable or disable usage tracking
-  disabled: false, // Optionally disable the plugin
-})
-```
-
 ## Usage
 
-Once installed and configured, the Media Cleaner Plugin will scan your media collection(s) and provide a dashboard in the Payload admin panel. From there, you can:
+Once installed and configured, the Media Cleaner Plugin will scan your media collection(s) and provide media usage information in the standard media view.
 
-- View all media files and their usage status
-- See a list of unused media files
-- Delete unused media files with a single click
-- View references to each media file across your content
+![example-screenshot](image.png)
 
 ## Development
 

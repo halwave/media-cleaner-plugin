@@ -40,7 +40,7 @@ export const mediaCleanerPlugin =
             ...(collection.admin || {}),
             components: {
               ...(collection.admin?.components || {}),
-              beforeListTable: ['media-cleaner-plugin/rsc#DeleteUnusedMediaButton'],
+              beforeListTable: ['media-cleaner-plugin/client#DeleteUnusedMediaButton'],
             },
           },
         }
